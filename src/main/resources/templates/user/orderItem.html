@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="blocks/headHTML.html :: head"></head>
+<body>
+  <header th:insert="blocks/header.html :: header"></header>
+  <div class="container d-flex flex-column min-vh-100">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+
+              <span sec:authentication="name" class="fs-4">#USER NAME</span>
+              <hr>
+              <ul class="nav nav-pills flex-column mb-auto">
+                <li>
+                  <a href="/user" class="nav-link text-white">
+                    Данные пользователя
+                  </a>
+                </li>
+                <li>
+                  <a href="/user/favourite" class="nav-link text-white">
+                    Избранные наборы
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/user/currentOrders" class="nav-link active" aria-current="page">
+                    Текущие заказы
+                  </a>
+                </li>
+                <li>
+                  <a href="/user/shoppingCart" class="nav-link text-white">
+                    Корзина
+                  </a>
+                </li>
+                <li>
+                  <a href="/user/settings" class="nav-link text-white">
+                    Настройки
+                  </a>
+                </li>
+              </ul>
+              <hr>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+          <div class="d-flex flex-column flex-shrink-0 p-3 text-white border rounded mt-4 bg-white">
+            <div th:each="item : ${products}" class="alert alert-info m-3">
+                <p th:text="'Название: ' + ${item.name}"/>
+                <p th:text="'Количество товара: ' + ${item.amount}"/>
+                <a th:href="'/catalog/item/' + ${item.productId}" class="btn btn-warning m-1">Детальнее</a>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div th:insert="blocks/footer.html :: footer"></div>
+</body>
+</html>

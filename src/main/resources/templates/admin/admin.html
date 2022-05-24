@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="blocks/headHTML.html :: head"></head>
+<body>
+  <header th:insert="blocks/header.html :: header"></header>
+  <div class="container d-flex flex-column min-vh-100">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+
+              <span class="fs-4 mx-auto">ADMIN</span>
+              <hr>
+              <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                  <a href="/admin/statistic" class="nav-link active" aria-current="page">
+                    Статистика
+                  </a>
+                </li>
+                <li>
+                  <a href="/admin/catalog" class="nav-link text-white">
+                    Изменить каталог
+                  </a>
+                </li>
+              </ul>
+              <hr>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+          <div class="d-flex flex-column flex-shrink-0 p-3 text-white border rounded mt-4 bg-white">
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Название продукта</th>
+                  <th scope="col">Количество проданного</th>
+                  <th scope="col">Рейтинг</th>
+                  <th scope="col">Сумма</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item : ${products}">
+                  <td th:text="${item.productId}" />
+                  <td th:text="${item.name}" />
+                  <td th:text="${item.amount}" />
+                  <td th:text="${item.rating}" />
+                  <td th:text="${item.price}" />
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div th:insert="blocks/footer.html :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="blocks/headHTML.html :: head"></head>
+<body>
+    <div class="form-signin mx-auto mt-5 pt-5 bg-secondary text-white border rounded" style="height: 450px; width: 500px;">
+      <div class="w-75 m-auto">
+        <h1 class="h3 mb-3 fw-normal">Личный кабинет</h1>
+        <form th:action="@{/login}" method="post">
+          <fieldset>
+            <div class="form-floating text-dark my-3">
+              <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+              <label for="floatingInput">Логин</label>
+            </div>
+            <div class="form-floating text-dark my-3">
+              <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+              <label for="floatingPassword">Пароль</label>
+            </div>
+          
+            <div class="checkbox mb-3">
+              <label for="remember-me" class="form-check-label">Запомнить меня</label>
+              <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
+          </fieldset>
+        </form>
+        <a href="javascript:history.back()"><button class="w-100 btn btn-lg btn-danger my-4" type="submit">Назад</button></a>
+      </div>
+    </div>
+</body>
+</html>

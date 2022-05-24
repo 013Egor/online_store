@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="blocks/headHTML.html :: head"></head>
+<body>
+  <header th:insert="blocks/header.html :: header"></header>
+  <div class="container d-flex flex-column min-vh-100">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+
+              <span class="fs-4 mx-auto">ADMIN</span>
+              <hr>
+              <ul class="nav nav-pills flex-column mb-auto">
+                <li>
+                  <a href="/admin/statistic" class="nav-link text-white">
+                    Статистика
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/admin/catalog" class="nav-link active" aria-current="page">
+                    Изменить каталог
+                  </a>
+                </li>
+              </ul>
+              <hr>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="d-flex flex-column flex-shrink-0 p-3 border rounded mt-4 bg-white text-dark">
+                <label for="Name" class="mx-3">Название продукта</label>
+                <form class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start my-3" action="#" th:action="@{/admin/add}" th:object="${product}" method="post">
+                    <div class="form-group mx-3">
+                      <input type="text" class="form-control" placeholder="Введите название продукта" th:field="*{name}"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                </form>
+                <hr>
+                <div class="container mt-5">
+                  <label class="text-dark mx-3">Текущий каталог:</label>
+                  <div th:each="item : ${allProducts}" class="alert alert-info mt-2">
+                    <p th:text="'Название: ' + ${item.name}"/>
+                    <p th:text="'Количество товара: ' + ${item.amount}"/>
+                    <p th:text="'Рейтинг: ' + ${item.rating}"/>
+                    <a th:href="'/admin/product/' + ${item.id} + '/edit'" class="btn btn-warning">Детальнее</a>
+                    <a th:href="'/admin/product/' + ${item.id} + '/delete'" class="btn btn-danger">Удалить</a>
+                  </div>
+                </div>
+        </div>
+    </div>
+  </div>
+  <div th:insert="blocks/footer.html :: footer"></div>
+</body>
+</html>

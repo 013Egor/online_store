@@ -1,0 +1,38 @@
+<div th:fragment="header">
+    <header class="p-3 bg-dark text-white">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+              <li><a href="/home" class="nav-link px-2 text-secondary">Домашняя страница</a></li>
+              <li><a href="/catalog" class="nav-link px-2 text-white">Каталог</a></li>
+              <li><a href="/about" class="nav-link px-2 text-white">О нас</a></li>
+            </ul>
+
+            <div class="text-end nav">
+              <form action="/login">
+                <input sec:authorize="isAnonymous()" type="submit" class="btn btn-outline-light me-2" value="Войти" />
+              </form>
+              <form action="/registration">
+                <input sec:authorize="isAnonymous()" type="submit" class="btn btn-outline-light me-2" value="Зарегистрироваться" />
+              </form>
+              <form action="/user">
+                <input sec:authorize="hasRole('ROLE_USER')" type="submit" class="btn btn-info me-2" value="Профиль" />
+              </form>
+              <form action="/customer/orders">
+                <input sec:authorize="hasRole('ROLE_ADMIN')" type="submit" class="btn btn-info me-2" value="Продавец" />
+              </form>
+              <form action="/admin/statistic">
+                <input sec:authorize="hasRole('ROLE_ADMIN')" type="submit" class="btn btn-info me-2" value="Администратор" />
+              </form>
+              <form action="/customer/orders">
+                <input sec:authorize="hasRole('ROLE_CUSTOMER')" type="submit" class="btn btn-info me-2" value="Продавец" />
+              </form>
+              <form action="/logout">
+                <input sec:authorize="isAuthenticated()" type="submit" class="btn btn-danger me-2" value="Выйти" />
+              </form>
+            </div>
+          </div>
+        </div>
+    </header>
+</div>

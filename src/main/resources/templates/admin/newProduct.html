@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="blocks/headHTML.html :: head"></head>
+<body>
+  <header th:insert="blocks/header.html :: header"></header>
+    <div class="d-flex flex-column flex-shrink-0 p-3 border rounded mt-4 mx-auto bg-white text-dark" style="width: 75%;">
+        <form class="mx-3" th:object="${newProduct}" method="POST" enctype="multipart/form-data" action="/admin/catalog">
+            <div class="form-group my-2">
+                <label for="Name">Название продукта</label>
+                <input type="text" class="form-control" name="productName" th:value="${newProduct.name}" placeholder="Введите название продукта" th:field="*{name}">
+            </div>
+            <div class="form-group my-2">
+                <label for="price">Цена</label>
+                <input type="number" step="0.01" class="form-control" name="price" placeholder="Введите название продукта" th:field="*{price}">
+            </div>
+            <div class="form-group my-2">
+                <label>Описание продукта</label><br>
+                <textarea name="composition" rows="4" cols="50" th:field="*{composition}"></textarea>
+            </div>
+            <div class="form-group my-2">
+                <label>Количество продукта</label><br>
+                <input type="number" name="quantity" min="1" th:field="*{amount}">
+            </div>
+            <div class="form-group my-2">
+                <label>Изображение</label><br>
+                <input type="file" name="file" accept="image/png, image/jpeg"/>
+            </div>
+            <button type="submit" class="btn btn-primary my-2">Submit</button>
+        </form>
+    </div>
+  <div th:insert="blocks/footer.html :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="blocks/headHTML.html :: head"></head>
+<body>
+  <header th:insert="blocks/header.html :: header"></header>
+  <div class="container d-flex flex-column min-vh-100">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white border rounded mt-4 bg-white">
+      <div th:if="${isEmpty}" class="border rounded bg-dark m-3 p-1">
+        <p class="text-center">Доступных заказов нет</p>
+      </div>  
+      <div th:each="item : ${orders}" class="alert alert-info m-3">
+            <p th:text="'ID: ' + ${item.id}"/>
+            <p th:text="'Дата заказа: ' + ${item.day} + '.' + ${item.month} + '.' + ${item.year}"/>
+            <div th:if="${item.isDelivered}"><p>Товар доставлен</p></div>
+            <div th:if="${!item.isDelivered}"><p>Товар в пути</p></div>
+            <a th:href="'/customer/order/' + ${item.id}" class="btn btn-warning m-1">Детальнее</a>
+            <a th:href="'/customer/order/' + ${item.id} + '/take'" class="btn btn-danger m-1">Забрать</a>
+        </div>
+    </div>
+  </div>
+  <div th:insert="blocks/footer.html :: footer"></div>
+</body>
+</html>

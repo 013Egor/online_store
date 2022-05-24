@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="blocks/headHTML.html :: head"></head>
+<body>
+  <header th:insert="blocks/header.html :: header"></header>
+  <div class="container">
+      <div class="d-flex flex-column flex-shrink-0 p-3 text-dark border rounded mt-4 bg-white">
+        <div class="row">
+            <div class="col-md-6">
+                <div>
+                    <img th:src="@{${product.getPicturePath()}}" class="w-100 border rounded p-3 m-2 bg-light"><br>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div sec:authorize="hasRole('ROLE_USER')" class="border rounded p-3 m-2 bg-light">
+                    <form th:action="@{'/user/item/' + ${product.id} + '/setRating'}" method="post">
+                        <label>Рейтинг:</label>
+                        <input type="number" name="rating" min="0" max="5">
+                        <button class="btn btn-primary">Отправить</button>
+                    </form>
+                </div>
+                <dif th:if="${message != null}" class="bg-danger border rounded text-white">
+                    <p th:text="${message}" class="m-auto text-center" />
+                </dif>
+                <div sec:authorize="hasRole('ROLE_USER')" class="border rounded p-3 m-2 bg-light">
+                    <form th:action="@{'/user/item/' + ${product.id} + '/toCart'}" method="post">
+                        <label>В корзину:</label>
+                        <input type="number" name="cart" min="1">
+                        <button class="btn btn-primary">Добавить</button>
+                    </form>
+                </div>
+                <div sec:authorize="hasRole('ROLE_USER')" class="border rounded p-3 m-2 bg-light">
+                    <div th:if="${!isFavourite}">
+                        <a th:href="@{'/user/item/' + ${product.id} + '/toFavour'}" class="btn btn-primary mx-3">Добавить в избранные</a>
+                    </div>
+                    <div th:if="${isFavourite}">
+                        <a th:href="@{'/user/item/' + ${product.id} + '/delFromFavour'}" class="btn btn-primary mx-3">Убрать из избранного</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group my-2">
+            <div class="form-group my-2 border rounded bg-light">
+                <div class="m-3">
+                    <label>Название:</label>
+                    <hr>
+                    <p th:text="${product.name}" />
+                </div>
+            </div>
+            <div class="form-group my-2 border rounded bg-light">
+                <div class="m-3">
+                    <label>Цена:</label>
+                    <hr>
+                    <p th:text="${product.price}" />
+                </div>
+            </div>
+            <div class="form-group my-2 border rounded bg-light">
+                <div class="m-3">
+                    <label>Описание:</label>
+                    <hr>
+                    <p th:text="${product.composition}" />
+                </div>
+            </div>
+            <div class="form-group my-2 border rounded bg-light">
+                <div class="m-3">
+                    <label>Количество:</label>
+                    <hr>
+                    <p th:text="${product.amount}" />
+                </div>
+            </div>
+            <div class="form-group my-2 border rounded bg-light">
+                <div class="m-3">
+                    <label>Рейтинг:</label>
+                    <hr>
+                    <p th:text="${product.rating}" />
+                </div>
+            </div>
+        </div>
+      </div>
+  </div>
+  <div th:insert="blocks/footer.html :: footer"></div>
+</body>
+</html>

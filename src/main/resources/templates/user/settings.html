@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="blocks/headHTML.html :: head"></head>
+<script th:src="@{/js/passwordValidation.js}" ></script>
+<body>
+  <header th:insert="blocks/header.html :: header"></header>
+  <div class="container d-flex flex-column min-vh-100">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+
+              <span sec:authentication="name" class="fs-4">#USER NAME</span>
+              <hr>
+              <ul class="nav nav-pills flex-column mb-auto">
+                <li>
+                  <a href="/user" class="nav-link text-white">
+                    Данные пользователя
+                  </a>
+                </li>
+                <li>
+                  <a href="/user/favourite" class="nav-link text-white">
+                    Избранные наборы
+                  </a>
+                </li>
+                <li>
+                  <a href="/user/currentOrders" class="nav-link text-white">
+                    Текущие заказы
+                  </a>
+                </li>
+                <li>
+                  <a href="/user/shoppingCart" class="nav-link text-white">
+                    Корзина
+                  </a>
+                </li>
+                <li  class="nav-item">
+                  <a href="/user/settings" class="nav-link active" aria-current="page">
+                    Настройки
+                  </a>
+                </li>
+              </ul>
+              <hr>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+          <div id="form" class="d-flex flex-column flex-shrink-0 p-3 text-dark border rounded mt-4 bg-white">
+            <form th:action="@{/user/settings}" th:object="${form}" method="post">
+              <div class="form-group">
+                <label>Имя:</label>
+                <input type="text" class="form-control" placeholder="Введите имя" th:field="*{firstName}">
+                <label>Фамилия:</label>
+                <input type="text" class="form-control" placeholder="Введите фамилию" th:field="*{lastName}">
+                <label>Отчество:</label>
+                <input type="text" class="form-control" placeholder="Введите отчество" th:field="*{middleName}">
+              </div>
+              <hr>
+              <div class="form-group">
+                <label>Номер телефона:</label>
+                <input type="text" class="form-control" placeholder="Введите номер телефона" th:field="*{telNumber}">
+              </div>
+              <hr>
+              <div class="form-group">
+                <label>Адрес доставки:</label>
+                <input type="text" class="form-control" placeholder="Введите адрес доставки" th:field="*{address}">
+              </div>
+              <hr>
+              <div class="form-group">
+                <label>Новый Email:</label>
+                <input type="email" class="form-control" placeholder="Введите email" th:field="*{email}">
+              </div>
+              <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </form>
+            <hr>
+            <div th:if="${error != null}" class="bg-danger border rounded text-white">
+              <p th:text="${error}" class="m-auto text-center"/>
+            </div>
+            <div id="passwordForm">
+              <form th:action="@{/user/changePassword}" method="post" onsubmit="return verifyPassword()">
+                <div class="form-group">
+                  <label>Старый пароль:</label>
+                  <input type="password" class="form-control" id="oldPassword" name="oldPassword" placeholder="Password">
+                  <label>Новый пароль:</label>
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                  <label>Повторите пароль:</label>
+                  <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+              </form>
+            </div>
+
+            <hr>
+            <div>
+              <form action="/user/delete" method="get">
+                <input type="submit" class="btn btn-danger me-2" value="Удалить аккаунт" />
+              </form>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div th:insert="blocks/footer.html :: footer"></div>
+</body>
+</html>
