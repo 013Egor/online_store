@@ -45,16 +45,19 @@ public class MainController {
     UserPrincipalService userService;
 
     private int getPrincipalId() throws Exception {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal user = (UserPrincipal) auth.getPrincipal();
 
         if (user.getUsername().equals("anonymousUser")) {
             throw new Exception();
         }
+
         return user.getId();
     }
 
     private boolean hasFavProduct(int id, int productId) {
+
         Iterable<FavouriteProduct> all = fProductRepository.findAll();
         for (FavouriteProduct item : all) {
             if (item.getUserId() == id && item.getProductId() == productId) {
@@ -65,31 +68,56 @@ public class MainController {
         return false;
     }
 
-	@GetMapping("/home")
-	public String homeFirst(Model model) {
-		model.addAttribute("title", "Главная страница");
+    private void sendErrorMessage(HttpServletRequest request, Model model) {
+        Map<String, ?> messages = RequestContextUtils.getInputFlashMap(request);
+        if (messages != null) {
+            String mes = (String) messages.get("message");
+            model.addAttribute("message", mes);
+        }
+    }
+
+    private void sendProductInfo (Model model, int id) {
+        ProductUnit product = productsRepository.findById(id).orElseThrow();
+
+        model.addAttribute("product", product);
+        int userId;
+        try {
+            userId = getPrincipalId();
+            boolean tmp = hasFavProduct(userId, id);
+            model.addAttribute("isFavourite", tmp);
+        } catch (Exception e) {
+            model.addAttribute("isFavourite", false);
+        }
+    }
+
+    private LinkedList<ProductUnit> getBestProducts() {
         Iterable<ProductUnit> all = productsRepository.findAll();
         LinkedList<ProductUnit> best = new LinkedList<ProductUnit>();
+
         for (ProductUnit item: all) {
             if (item.getRating() >= 4) {
                 best.add(item);
             }
         }
-        model.addAttribute("bestProducts", best);
+
+        return best;
+    }
+
+	@GetMapping("/home")
+	public String homeFirst(Model model) {
+
+		model.addAttribute("title", "Главная страница");
+        model.addAttribute("bestProducts", getBestProducts());
+
 		return "home";
 	}
 
     @GetMapping("/")
 	public String homeSecond(Model model) {
+
 		model.addAttribute("title", "Главная страница");
-        Iterable<ProductUnit> all = productsRepository.findAll();
-        LinkedList<ProductUnit> best = new LinkedList<ProductUnit>();
-        for (ProductUnit item: all) {
-            if (item.getRating() >= 4) {
-                best.add(item);
-            }
-        }
-        model.addAttribute("bestProducts", best);
+        model.addAttribute("bestProducts", getBestProducts());
+
 		return "home";
 	}
 
@@ -114,17 +142,21 @@ public class MainController {
 
     @GetMapping("/registration")
     public String registration(Model model, HttpServletRequest request) {
+
         model.addAttribute("userForm", new Form());
         Map<String, ?> error = RequestContextUtils.getInputFlashMap(request);
+
         if (error != null) {
             String message = (String) error.get("error");
             model.addAttribute("error", message);
         }
+
         return "registration";
     }
 
     @PostMapping("/registration")
-    public String addUser(@ModelAttribute Form userForm, Model model, RedirectAttributes atr) {
+    public String addUser(@ModelAttribute Form userForm, Model model, 
+                        RedirectAttributes atr) {
         
         User user  = new User(userForm);
 
@@ -146,26 +178,16 @@ public class MainController {
     }
 
     @GetMapping("/catalog/item/{id}")
-    public String getDetails(@PathVariable(value="id") int id, HttpServletRequest request, Model model){ 
+    public String getDetails(@PathVariable(value="id") int id, 
+                        HttpServletRequest request, Model model) { 
+
         if (productsRepository.existsById(id) == false) {
             return "redirect:/catalog";
         }
-        Map<String, ?> messages = RequestContextUtils.getInputFlashMap(request);
-        if (messages != null) {
-            String mes = (String) messages.get("message");
-            model.addAttribute("message", mes);
-        }
-        ProductUnit product = productsRepository.findById(id).orElseThrow();
 
-        model.addAttribute("product", product);
-        int userId;
-        try {
-            userId = getPrincipalId();
-            boolean tmp = hasFavProduct(userId, id);
-            model.addAttribute("isFavourite", tmp);
-        } catch (Exception e) {
-            model.addAttribute("isFavourite", false);
-        }
+        sendErrorMessage(request, model);
+        sendProductInfo(model, id);
+        
         return "/catalog/productItem";
     }
 }

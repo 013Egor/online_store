@@ -18,38 +18,48 @@ public class CompletedOrderItem {
     double rating;
     double price;
 
-    public CompletedOrderItem() {
-    }
+    public CompletedOrderItem() {}
+
     public Integer getId() {
         return id;
     }
+
     public int getProductId() {
         return productId;
     }
+    
     public void setProductId(int productId) {
         this.productId = productId;
     }
+    
     public String getName() {
         return name;
     }
+    
     public void setName(String name) {
         this.name = name;
     }
+    
     public int getAmount() {
         return amount;
     }
+    
     public void setAmount(int amount) {
         this.amount = amount;
     }
+    
     public double getRating() {
         return rating;
     }
+    
     public void setRating(double rating) {
         this.rating = rating;
     }
+    
     public double getPrice() {
         return price;
     }
+    
     public void setPrice(double price) {
         this.price = price;
     }

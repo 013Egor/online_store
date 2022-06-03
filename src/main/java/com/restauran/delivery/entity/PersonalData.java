@@ -20,6 +20,18 @@ public class PersonalData implements IData {
     String address;
     int userId;
 
+    public PersonalData() {}
+
+    public PersonalData(String firstName, String lastName, String middleName, String telNumber, String email,
+            String address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.telNumber = telNumber;
+        this.email = email;
+        this.address = address;
+    }
+
     public PersonalData(Form userForm) {
         this.setAddress(userForm.getAddress());
         this.setEmail(userForm.getEmail());
@@ -28,8 +40,6 @@ public class PersonalData implements IData {
         this.setMiddleName(userForm.getMiddleName());
         this.setTelNumber(userForm.getTelNumber());
     }
-
-    public PersonalData() {}
 
     public void setNewData(Form userForm) {
         if (userForm.getFirstName().equals("") == false){
@@ -58,8 +68,8 @@ public class PersonalData implements IData {
     public String getFirstName() {
         return firstName;
     }
-    public void setFirstName(String firsrName) {
-        this.firstName = firsrName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
     public String getLastName() {
         return lastName;

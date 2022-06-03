@@ -33,7 +33,9 @@ public class CustomerController {
     ProductsRepository productsRepository;
 
 
-    private CompletedOrderItem getCompletedOrderItem(Iterable<CompletedOrderItem> completedOrders, int id) {
+    private CompletedOrderItem getCompletedOrderItem(
+                        Iterable<CompletedOrderItem> completedOrders, int id) {
+
         for (CompletedOrderItem cItem : completedOrders) {
             if (id == cItem.getProductId()) {
                return cItem; 
@@ -42,8 +44,8 @@ public class CustomerController {
         return null;
     }
 
-    @GetMapping("/customer/orders")
-    public String getOrderPage(Model model) {
+    private LinkedList<Order> getOrders() {
+
         Iterable<Order> all = orderRepository.findAll();
         LinkedList<Order> order = new LinkedList<Order>();
         for (Order item : all) {
@@ -51,23 +53,36 @@ public class CustomerController {
                 order.add(item);
             }
         }
+
+        return order;
+    }
+
+    @GetMapping("/customer/orders")
+    public String getOrderPage(Model model) {
+
+        LinkedList<Order> order = getOrders();
         model.addAttribute("orders", order);
+
         if (order.size() == 0) {
             model.addAttribute("isEmpty", true);
         } else {
             model.addAttribute("isEmpty", false);
         }
+
         return "/customer/orders";
     }
 
     
     @GetMapping("/customer/order/{id}/take")
     public String takeOffOrder(@PathVariable("id") int id) {
+
         Order order = orderRepository.findById(id).orElseThrow();
         order.setDelivered(true);
+
         Iterable<OrderItem> all = orderItemsRepository.findAll();
         Iterable<CompletedOrderItem> completedOrders = cOrdersRepository.findAll();
         CompletedOrderItem orderItem;
+
         for (OrderItem item : all) {
             if (item.getOrderNum() == id) {
                 orderItem = null;
@@ -85,13 +100,16 @@ public class CustomerController {
             }
         }
         orderRepository.save(order);
+
         return "redirect:/customer/orders";
     }
 
     @GetMapping("/customer/order/{id}")
     public String getOrderItem(@PathVariable("id") int id, Model model) {
+        
         Iterable<OrderItem> all = orderItemsRepository.findAll();
         LinkedList<OrderItem> products = new LinkedList<OrderItem>();
+        
         for (OrderItem item: all) {
             if (item.getOrderNum() == id) {
                 products.add(item);

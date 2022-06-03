@@ -29,6 +29,7 @@ public class AdminController {
     private CompletedOrdersRepository cOrdersRepository;
     
     private Iterable<CompletedOrderItem> getCompletedOrders() {
+
         Iterable<CompletedOrderItem> all = cOrdersRepository.findAll();
 
         return all;
@@ -36,33 +37,41 @@ public class AdminController {
 
     @GetMapping("/admin/statistic")
     public String getStatisticPage(Model model) {
+
         model.addAttribute("title", "Страница администратора");
         Iterable<CompletedOrderItem> all = getCompletedOrders();
         model.addAttribute("products", all);
+
         return "/admin/admin";
     }
 
     
     @GetMapping("/admin/catalog")
     public String getCatalogPage(Model model) {
+
         model.addAttribute("product", new ProductUnit());
 
         Iterable<ProductUnit> products = productRepository.findAll();
         model.addAttribute("allProducts", products);
+
         return "/admin/alteringCatalog";
     }
 
     
     @PostMapping("/admin/add")
     public String addProduct(@ModelAttribute ProductUnit product, Model model) {
+
         model.addAttribute("newProduct", product);
         model.addAttribute("title", "Добавление продукта");
+        
         return "/admin/newProduct";
     }
 
     
     @PostMapping("/admin/catalog")
-	public String handleSavedProduct(ProductUnit product, @RequestParam("file") MultipartFile multipartFile) throws IOException {
+	public String handleSavedProduct(ProductUnit product, 
+                        @RequestParam("file") MultipartFile multipartFile) 
+                        throws IOException {
         
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         product.setPicture(fileName);
@@ -78,6 +87,7 @@ public class AdminController {
 
     @GetMapping("/admin/product/{id}/edit")
     public String getEditPage(@PathVariable(value = "id") int id, Model model) {
+
         if (productRepository.existsById(id) == false) {
             return "redirect:/admin/catalog";
         }
@@ -90,7 +100,9 @@ public class AdminController {
     }
 
     @PostMapping("/admin/product/{id}/edit")
-	public String saveEditProduct(@PathVariable(value = "id") int id, ProductUnit newProduct) throws IOException {
+	public String saveEditProduct(@PathVariable(value = "id") int id, 
+                            ProductUnit newProduct) throws IOException {
+
         if (productRepository.existsById(id) == false) {
             return "redirect:/admin/catalog";
         }
@@ -107,7 +119,10 @@ public class AdminController {
 	}
 
     @PostMapping("/admin/product/{id}/{id2}")
-	public String saveEditProduct(@PathVariable(value = "id") int id, @RequestParam("file") MultipartFile multipartFile) throws IOException {
+	public String saveEditProduct(@PathVariable(value = "id") int id, 
+                            @RequestParam("file") MultipartFile multipartFile) 
+                            throws IOException {
+
         if (productRepository.existsById(id) == false) {
             return "redirect:/admin/catalog";
         }
@@ -127,6 +142,7 @@ public class AdminController {
 
     @GetMapping("/admin/product/{id}/delete")
 	public String deleteProduct(@PathVariable(value = "id") int id) throws IOException {
+        
         if (productRepository.existsById(id) == false) {
             return "redirect:/admin/catalog";
         }

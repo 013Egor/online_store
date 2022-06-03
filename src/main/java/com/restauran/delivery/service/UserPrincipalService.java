@@ -26,6 +26,7 @@ public class UserPrincipalService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         User user = findByName(username);
 
         if (user == null) {
@@ -38,6 +39,7 @@ public class UserPrincipalService implements UserDetailsService {
     }
 
     private User findByName(String name) {
+        
         Iterable<User> users = userRepository.findAll();
         Iterator<User> it = users.iterator();
         User tempUser = null;
@@ -66,6 +68,7 @@ public class UserPrincipalService implements UserDetailsService {
     }
 
     public User savePassword(int id, String password, String newPassword) {
+        
         User user = userRepository.findById(id).orElseThrow();
 
         if (passwordEncoder.matches(password, user.getPassword())) {

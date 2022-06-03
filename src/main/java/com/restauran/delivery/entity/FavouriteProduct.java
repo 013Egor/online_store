@@ -14,23 +14,30 @@ public class FavouriteProduct implements IData{
 
     int productId;
     int userId;
+
     public FavouriteProduct() {}
+    
     public FavouriteProduct(int productId, int userId) {
         this.productId = productId;
         this.userId = userId;
     }
+    
     public Integer getId() {
         return id;
     }
+    
     public int getProductId() {
         return productId;
     }
+    
     public void setProductId(int productId) {
         this.productId = productId;
     }
+    
     public int getUserId() {
         return userId;
     }
+    
     public void setUserId(int userId) {
         this.userId = userId;
     }

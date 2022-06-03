@@ -96,5 +96,11 @@ public class ProductUnit {
         this.price = price;
     }
 
-
+    public void changeRating(int rating) {
+        double newRating = this.getRating() * this.getVotingAmout();
+        this.increaseVotingAmount();
+        newRating += rating;
+        newRating = newRating / this.getVotingAmout();
+        this.setRating(newRating);
+    }
 }

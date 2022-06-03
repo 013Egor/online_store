@@ -9,6 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="allOrders")
 public class Order implements IData {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer id;
@@ -20,6 +21,7 @@ public class Order implements IData {
     int day;
 
     public Order(){}
+
     public Order(int userId, int year, int month, int day) {
         this.userId = userId;
         this.year = year;
