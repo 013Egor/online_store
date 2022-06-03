@@ -114,11 +114,7 @@ public class MainController {
 
     @GetMapping("/")
 	public String homeSecond(Model model) {
-
-		model.addAttribute("title", "Главная страница");
-        model.addAttribute("bestProducts", getBestProducts());
-
-		return "home";
+		return "redirect:/home";
 	}
 
     @GetMapping("/about")

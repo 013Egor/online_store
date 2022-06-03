@@ -1,5 +1,6 @@
 package com.restauran.delivery;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.restauran.delivery.entity.Form;
@@ -7,7 +8,6 @@ import com.restauran.delivery.entity.PersonalData;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 @SpringBootTest
 public class PersonalDataTest {
@@ -30,28 +30,23 @@ public class PersonalDataTest {
     PersonalData emptyData;
     Form form;
 
-    @BeforeTestClass
-    void setData() {
-
+    @Test
+    void testNewData() {   
         emptyData = new PersonalData();
         fullData = new PersonalData(firstName, lastName, middleName,
                                     telNumber, email, address);
         form = new Form(firstNameAfter, lastNameAfter, middleNameAfter,
-                        telNumberAfter, emailAfter, addressAfter);    
-    }
-
-    @Test
-    void testNewData() {   
+                        telNumberAfter, emailAfter, addressAfter); 
 
         emptyData.setNewData(form);
         fullData.setNewData(form);
 
-        assertTrue(emptyData.getFirstName().equals(""));
-        assertTrue(emptyData.getLastName().equals(""));
-        assertTrue(emptyData.getMiddleName().equals(""));
-        assertTrue(emptyData.getTelNumber().equals(""));
-        assertTrue(emptyData.getEmail().equals(""));
-        assertTrue(emptyData.getAddress().equals(""));
+        assertFalse(emptyData.getFirstName().equals(""));
+        assertFalse(emptyData.getLastName().equals(""));
+        assertFalse(emptyData.getMiddleName().equals(""));
+        assertFalse(emptyData.getTelNumber().equals(""));
+        assertFalse(emptyData.getEmail().equals(""));
+        assertFalse(emptyData.getAddress().equals(""));
 
         assertTrue(fullData.getFirstName().equals(firstNameAfter));
         assertTrue(fullData.getLastName().equals(lastNameAfter));
