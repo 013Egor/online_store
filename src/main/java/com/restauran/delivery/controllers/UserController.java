@@ -1,9 +1,5 @@
 package com.restauran.delivery.controllers;
 
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -12,27 +8,19 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.restauran.delivery.entity.FavouriteProduct;
 import com.restauran.delivery.entity.Form;
-import com.restauran.delivery.entity.IData;
-import com.restauran.delivery.entity.Order;
-import com.restauran.delivery.entity.OrderItem;
 import com.restauran.delivery.entity.PersonalData;
 import com.restauran.delivery.entity.ProductUnit;
 import com.restauran.delivery.entity.ShoppingCart;
 import com.restauran.delivery.entity.User;
 import com.restauran.delivery.exceptions.NotEnoghElementsException;
-import com.restauran.delivery.repositories.FavouriteProductRepository;
-import com.restauran.delivery.repositories.OrderItemsRepository;
-import com.restauran.delivery.repositories.OrderRepository;
-import com.restauran.delivery.repositories.PersonalDataRepository;
-import com.restauran.delivery.repositories.ProductsRepository;
-import com.restauran.delivery.repositories.ShoppingCartRepository;
-import com.restauran.delivery.service.UserPrincipal;
+import com.restauran.delivery.service.FavouriteProductService;
+import com.restauran.delivery.service.OrderManager;
+import com.restauran.delivery.service.PersonalDataService;
+import com.restauran.delivery.service.ProductService;
+import com.restauran.delivery.service.ShoppingCartService;
 import com.restauran.delivery.service.UserPrincipalService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,193 +35,27 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 public class UserController {
 
     @Autowired
-    FavouriteProductRepository favProdRepository;
-
-    @Autowired
-    ShoppingCartRepository cartRepository;
-
-    @Autowired
-    ProductsRepository productsRepository;
-
-    @Autowired
-    PersonalDataRepository pDataRepository;
-
-    @Autowired
-    OrderItemsRepository orderItemsRepository;
-
-    @Autowired
-    OrderRepository orderRepository;
+    PersonalDataService personalData;
 
     @Autowired
     UserPrincipalService userService;
 
-    private int getPrincipalId() {
+    @Autowired
+    ShoppingCartService shoppingCartService;
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
-        
-        return user.getId();
-    }
+    @Autowired
+    OrderManager orderManager;
 
-    private PersonalData getPersonalData(int id) {
+    @Autowired
+    FavouriteProductService favouriteProductService;    
 
-        Iterable<PersonalData> temp = pDataRepository.findAll();
-        Iterator<PersonalData> it = temp.iterator();
-        PersonalData data = null;
-
-        while (it.hasNext()) {
-            data = it.next();
-            if (data.getUserId() == id) {
-                return data;
-            }
-        }
-
-        return null;
-    }
-
-    private LinkedList<ShoppingCart> getCartsProducts() {
-
-        Iterable<ShoppingCart> cart = cartRepository.findAll();
-        LinkedList<ShoppingCart> products = new LinkedList<>();
-        int id = getPrincipalId();
-
-        for (ShoppingCart c : cart) {
-            if (id == c.getUserId()) {
-                products.add(c);
-            }
-        }
-
-        return products;
-    }
-
-    private LinkedList<Integer> getFavProducts() {
-
-        Iterable<FavouriteProduct> fav = favProdRepository.findAll();
-        LinkedList<Integer> products = new LinkedList<>();
-        int id = getPrincipalId();
-
-        for (FavouriteProduct fProduct : fav) {
-            if (id == fProduct.getUserId()) {
-                products.add(fProduct.getProductId());
-            }
-        }
-
-        return products;
-    }
-
-    private LinkedList<ProductUnit> getProductsById(Iterable<Integer> ids) {
-
-        LinkedList<ProductUnit> products = new LinkedList<ProductUnit>();
-        ProductUnit temp;
-
-        for (Integer id : ids) {
-            temp = productsRepository.findById(id).orElseThrow();
-            products.add(temp);
-        }
-
-        return products;
-    }
-
-    private int getFavProductId(int id) throws Exception {
-
-        Iterable<FavouriteProduct> all = favProdRepository.findAll();
-
-        for (FavouriteProduct item : all) {
-            if (item.getProductId() == id) {
-                return item.getId();
-            }
-        }
-
-        throw new Exception();
-    }
-
-    private ShoppingCart getProductCart(int userId, int productId) {
-
-        Iterable<ShoppingCart> cart = cartRepository.findAll();
-        for (ShoppingCart item : cart) {
-            if (item.getProductId() == productId && item.getUserId() == userId) {
-                return item;
-            }
-        }
-
-        return null;
-    }
-
-    private void setNewRating(int id, int rating) throws NoSuchElementException {
-
-        ProductUnit product;
-
-           product = productsRepository.findById(id).orElseThrow();
-
-        product.changeRating(rating);
-        productsRepository.save(product);
-    }
-    
-    private void addProductToCart(int id, int amount) throws NoSuchElementException, 
-                                                        NotEnoghElementsException {
-
-        ProductUnit product = productsRepository.findById(id).orElseThrow();    
-
-        int curAmount = product.getAmount();
-        if (curAmount < amount) {
-            throw new NotEnoghElementsException(product.getName(), curAmount);
-        }
-
-        curAmount -= amount;
-        product.setAmount(curAmount);
-
-        ShoppingCart cart = getProductCart(getPrincipalId(), id);
-        if (cart == null) {
-            cart = new ShoppingCart(product.getName(), id, getPrincipalId(), amount); 
-        } else {
-            cart.setAmount(cart.getAmount() + amount);
-        }
-
-        cartRepository.save(cart);
-    }
-
-    private boolean isShoppingCartEmpty(Iterable<ShoppingCart> list) {
-        
-        for (ShoppingCart item : list) {
-            item.getName();
-            return false;
-        }
-        return true;
-    }
-
-    private void makeOrder(Iterable<ShoppingCart> all ,int userId) {
-        
-        GregorianCalendar cal = new GregorianCalendar();
-        Order savedOrder = orderRepository.save(new Order(userId, cal.get(Calendar.YEAR),
-                                cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)));
-        
-        for (ShoppingCart item : all) {
-            if (item.getUserId() == userId) {
-                OrderItem order = new OrderItem(item.getName(), item.getProductId(), item.getAmount());
-                order.setOrderNum(savedOrder.getId());
-                order.setUserId(userId);
-                orderItemsRepository.save(order);
-                cartRepository.deleteById(item.getId());
-            }
-        }
-    }
-
-    public void clearTable(CrudRepository<?, Integer> repository) {
-
-        Iterable<IData> all =(Iterable<IData>) repository.findAll();
-        int userId = getPrincipalId();
-        
-        for (IData item : all) {
-            if (item.getUserId() == userId) {
-                repository.deleteById(item.getId());
-            }
-        }
-    }
+    @Autowired
+    ProductService productService;
 
     @GetMapping("/user")
     public String getUserPage(Model model) {
         
-        PersonalData data = getPersonalData(getPrincipalId());
+        PersonalData data = personalData.getPersonalData(userService.getPrincipalId());
 
         model.addAttribute("personal", data);
         model.addAttribute("title", "Страница пользователя");
@@ -243,9 +65,9 @@ public class UserController {
 
     @GetMapping("/user/favourite")
     public String getFavPage(Model model) {
-
-        LinkedList<Integer> favouriteProducts = getFavProducts();
-        Iterable<ProductUnit> products = getProductsById(favouriteProducts);
+        
+        Iterable<ProductUnit> products = 
+            favouriteProductService.getFavProducts(userService.getPrincipalId());
 
         model.addAttribute("products", products);
         
@@ -254,17 +76,9 @@ public class UserController {
 
     @GetMapping("/user/currentOrders")
     public String getOrederPage(Model model) {
-
-        Iterable<Order> all = orderRepository.findAll();
-        LinkedList<Order> order = new LinkedList<Order>();
-        int userId = getPrincipalId();
         
-        for (Order item : all) {
-            if (item.getUserId() == userId) {
-                order.add(item);
-            }
-        }
-        model.addAttribute("orders", order);
+        model.addAttribute("orders", 
+            orderManager.getUsersOrders(userService.getPrincipalId()));
 
         return "/user/currentOrders";
     }
@@ -272,7 +86,8 @@ public class UserController {
     @GetMapping("/user/shoppingCart")
     public String getCartPage(Model model) {
 
-        LinkedList<ShoppingCart> products = getCartsProducts();
+        LinkedList<ShoppingCart> products = 
+            shoppingCartService.getUsersProducts(userService.getPrincipalId());
 
         model.addAttribute("products", products);
         
@@ -302,9 +117,10 @@ public class UserController {
     @PostMapping("/user/settings")
     public String setNewUserData(@ModelAttribute Form form) {
 
-        PersonalData data = getPersonalData(getPrincipalId());
+        PersonalData data = personalData.getPersonalData(userService.getPrincipalId());
+        
         data.setNewData(form);
-        pDataRepository.save(data);
+        personalData.save(data);
 
         return "redirect:/user";
     }
@@ -314,7 +130,7 @@ public class UserController {
                                 @RequestParam("password") String newPassword,
                                 Model model, RedirectAttributes atr) {
 
-        User user = userService.savePassword(getPrincipalId(), password, newPassword);
+        User user = userService.savePassword(userService.getPrincipalId(), password, newPassword);
         
         if (user == null) {
             atr.addFlashAttribute("error", "Пароль не изменён, так как прежний пароль введён неправильно");
@@ -329,7 +145,7 @@ public class UserController {
                         @RequestParam("rating") int rating, Model model) {
 
         try {
-            setNewRating(id, rating);
+            productService.setNewRating(id, rating);
         } catch (NoSuchElementException e) {
             model.addAttribute("message", e.getMessage());
             return "error";
@@ -344,8 +160,8 @@ public class UserController {
                     RedirectAttributes atr) {
 
         try {
-            addProductToCart(id, amount);
-       
+            ProductUnit product = productService.getProductById(id);
+            shoppingCartService.addProductToCart(product, amount, userService.getPrincipalId());
         } catch (NoSuchElementException e) {
             model.addAttribute("message", e.getMessage());
 
@@ -363,38 +179,27 @@ public class UserController {
     @GetMapping("/user/item/{id}/delFromCart")
     public String delFromCart(@PathVariable("id") int id) {
 
-        Iterable<ShoppingCart> all = cartRepository.findAll();
-        int userId = getPrincipalId();
-        
-        for (ShoppingCart item : all) {
-            if (item.getProductId() == id && item.getUserId() == userId) {
-                cartRepository.deleteById(item.getId());
-            }
-        }
+        shoppingCartService.deleteById(id, userService.getPrincipalId());
 
         return "redirect:/user/shoppingCart";
     }
     
     @GetMapping("/user/shoppingCart/order")
     public String orderCart() {
-
-        int userId = getPrincipalId();
-        Iterable<ShoppingCart> all = cartRepository.findAll();
         
-        if (isShoppingCartEmpty(all)) {
+        try {
+            orderManager.order(userService.getPrincipalId());
+            return "redirect:/user/currentOrders";
+        } catch (NoSuchElementException e) {
             return "redirect:/user/shoppingCart";
-        }
-        
-        makeOrder(all, userId);
-
-        return "redirect:/user/currentOrders";
+        }        
     }
 
     @GetMapping("/user/item/{id}/toFavour")
     public String addToFavour(@PathVariable("id") int id) {
 
-        FavouriteProduct product = new FavouriteProduct(id, getPrincipalId());
-        favProdRepository.save(product);
+        FavouriteProduct product = new FavouriteProduct(id, userService.getPrincipalId());
+        favouriteProductService.save(product);
 
         return "redirect:/catalog/item/{id}";
     }
@@ -403,8 +208,7 @@ public class UserController {
     public String delFromFavour(@PathVariable("id") int id) {
 
         try {
-            int favId = getFavProductId(id);
-            favProdRepository.deleteById(favId);
+            favouriteProductService.deleteById(id);
         } catch (Exception e) {}
 
         return "redirect:/catalog/item/{id}";
@@ -413,16 +217,8 @@ public class UserController {
     @GetMapping("/user/order/{id}")
     public String getOrderItem(@PathVariable("id") int id, Model model) {
 
-        Iterable<OrderItem> all = orderItemsRepository.findAll();
-        LinkedList<OrderItem> products = new LinkedList<OrderItem>();
-        
-        for (OrderItem item: all) {
-            if (item.getOrderNum() == id) {
-                products.add(item);
-            }
-        }
-
-        model.addAttribute("products", products);
+        model.addAttribute("products", 
+            orderManager.getOrdersItems(userService.getPrincipalId()));
 
         return "user/orderItem";
     }
@@ -430,13 +226,14 @@ public class UserController {
     @GetMapping("/user/delete")
     public String deleteUser() {
 
-        clearTable(favProdRepository);
-        clearTable(cartRepository);
-        clearTable(pDataRepository);
-        clearTable(orderItemsRepository);
-        clearTable(orderRepository);
+        int userId = userService.getPrincipalId();
         
-        userService.delete(getPrincipalId());
+        favouriteProductService.clearUsersFavours(userId);
+        shoppingCartService.clearUsersCart(userId);
+        personalData.deleteById(userId);
+        orderManager.clearOrders(userId);
+        
+        userService.delete(userId);
 
         return "redirect:/logout";
     }    

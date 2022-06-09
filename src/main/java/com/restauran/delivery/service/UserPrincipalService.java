@@ -6,6 +6,8 @@ import com.restauran.delivery.entity.User;
 import com.restauran.delivery.repositories.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -82,5 +84,13 @@ public class UserPrincipalService implements UserDetailsService {
 
     public void delete(int id) {
         userRepository.deleteById(id);
+    }
+
+    public int getPrincipalId() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+        
+        return user.getId();
     }
 }
