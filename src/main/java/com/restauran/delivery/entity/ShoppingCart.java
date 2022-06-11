@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class ShoppingCart implements IData {
+public class ShoppingCart {
     
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)

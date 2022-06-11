@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class PersonalData implements IData {
+public class PersonalData {
     
     @Id
     @GeneratedValue(strategy=GenerationType.TABLE)

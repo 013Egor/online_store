@@ -48,4 +48,12 @@ public class ProductService {
     public boolean existsById(int id) {
         return productsRepository.existsById(id);
     }
+
+    public ProductUnit save(ProductUnit product) {
+        return productsRepository.save(product);
+    } 
+
+    public void deleteById(int id) {
+        productsRepository.deleteById(id);
+    }
 }

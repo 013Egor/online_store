@@ -7,14 +7,26 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
- 
+
+ @Service
 public class FileUploadUtil {
-     
-    public static void saveFile(String uploadDir, String fileName,
+    
+    String directory;
+
+    public FileUploadUtil() {
+        directory = "src/main/resources/static/img/";
+    }
+
+    public FileUploadUtil(String directory) {
+        this.directory = directory;
+    }
+
+    public void saveFile(String uploadDir, String fileName,
             MultipartFile multipartFile) throws IOException {
                 
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(directory + uploadDir);
          
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);

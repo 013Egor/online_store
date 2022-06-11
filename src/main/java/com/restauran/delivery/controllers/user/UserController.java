@@ -1,4 +1,4 @@
-package com.restauran.delivery.controllers;
+package com.restauran.delivery.controllers.user;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -218,9 +218,17 @@ public class UserController {
     public String getOrderItem(@PathVariable("id") int id, Model model) {
 
         model.addAttribute("products", 
-            orderManager.getOrdersItems(userService.getPrincipalId()));
+            orderManager.getOrdersItems(id));
 
         return "user/orderItem";
+    }
+
+    @GetMapping("/user/order/{id}/delete")
+    public String deleteCompletedOrder(@PathVariable("id") int id) {
+        
+        orderManager.deleteCompletedOrder(id);
+
+        return "redirect:/user/currentOrders";
     }
 
     @GetMapping("/user/delete")

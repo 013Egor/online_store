@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
+    @Autowired
     UserPrincipalService userService; 
     
     @Autowired
@@ -41,9 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin()
                     .loginPage("/login").permitAll()
                 .and()
-                    .logout().logoutUrl("/logout").logoutSuccessUrl("/home")
-                .and()
-                    .rememberMe().tokenValiditySeconds(2592000).key("remember");
+                    .logout().logoutUrl("/logout").logoutSuccessUrl("/home");
     }
 
     @Override

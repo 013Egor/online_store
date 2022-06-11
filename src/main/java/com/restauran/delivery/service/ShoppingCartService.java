@@ -87,6 +87,11 @@ public class ShoppingCartService {
             }
         }
     }
+
+    public void deleteById(int productId) {
+        cartRepository.deleteById(productId);
+    }
+
     public void clearUsersCart(int userId) {
 
         Iterable<ShoppingCart> all = cartRepository.findAll();

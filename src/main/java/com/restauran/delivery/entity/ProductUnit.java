@@ -103,4 +103,11 @@ public class ProductUnit {
         newRating = newRating / this.getVotingAmout();
         this.setRating(newRating);
     }
+
+    public void changeProduct(ProductUnit newProduct) {
+        this.setAmount(newProduct.getAmount());
+        this.setComposition(newProduct.getComposition());
+        this.setName(newProduct.getName());
+        this.setPrice(newProduct.getPrice());
+    }
 }

@@ -46,8 +46,13 @@
             <div th:each="item : ${orders}" class="alert alert-info m-3">
               <p th:text="'ID: ' + ${item.id}"/>
               <p th:text="'Дата заказа: ' + ${item.day} + '.' + ${item.month} + '.' + ${item.year}"/>
-              <div th:if="${item.isDelivered}"><p>Товар доставлен</p></div>
-              <div th:if="${!item.isDelivered}"><p>Товар в пути</p></div>
+              <div th:if="${item.isDelivered}">
+                <p>Товар доставлен</p>
+                <a th:href="'/user/order/' + ${item.id} + '/delete'" class="btn btn-danger m-1">Удалить</a>
+              </div>
+              <div th:if="${!item.isDelivered}">
+                <p>Товар в пути</p>
+              </div>
               <a th:href="'/user/order/' + ${item.id}" class="btn btn-warning m-1">Детальнее</a>
             </div>
           </div>

@@ -43,11 +43,13 @@
 
         <div class="col-md-9">
             <div class="d-flex flex-column flex-shrink-0 p-3 text-white border rounded mt-4 bg-white">
-              <div th:each="item : ${products}" class="col-md-3 alert alert-info m-3">
-                <p th:text="'Название: ' + ${item.name}"/>
-                <p th:text="'Количество товара: ' + ${item.amount}"/>
-                <a th:href="'/catalog/item/' + ${item.productId}" class="btn btn-warning m-1">Детальнее</a>
-                <a th:href="'/user/item/' + ${item.productId} + '/delFromCart'" class="btn btn-danger m-1">Убрать</a>
+              <div class="row">
+                <div th:each="item : ${products}" class="col-md-3 alert alert-info m-3 border">
+                  <p th:text="'Название: ' + ${item.name}"/>
+                  <p th:text="'Количество товара: ' + ${item.amount}"/>
+                  <a th:href="'/catalog/item/' + ${item.productId}" class="btn btn-warning m-1">Детальнее</a>
+                  <a th:href="'/user/item/' + ${item.productId} + '/delFromCart'" class="btn btn-danger m-1">Убрать</a>
+                </div>
               </div>
               <a th:if="${!isEmpty}" th:href="@{/user/shoppingCart/order}" class="btn btn-success">Заказать</a>
             </div>

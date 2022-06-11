@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="allOrders")
-public class Order implements IData {
+public class Order {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

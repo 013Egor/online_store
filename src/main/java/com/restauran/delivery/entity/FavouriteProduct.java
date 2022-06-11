@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class FavouriteProduct implements IData{
+public class FavouriteProduct {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
