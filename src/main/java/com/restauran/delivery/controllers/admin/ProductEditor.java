@@ -109,6 +109,10 @@ public class ProductEditor {
         if (productService.existsById(id) == false) {
             return "redirect:/admin/catalog";
         }
+        try {
+            fileUploadUtil.deleteFiles(id);
+        } catch (IOException e) {}
+        
         productService.deleteById(id);
         
 		return "redirect:/admin/catalog";

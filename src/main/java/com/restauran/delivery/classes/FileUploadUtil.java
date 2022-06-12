@@ -1,5 +1,6 @@
 package com.restauran.delivery.classes;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -38,5 +39,10 @@ public class FileUploadUtil {
         } catch (IOException ioe) {        
             throw new IOException("Could not save image file: " + fileName, ioe);
         }      
+    }
+
+    public void deleteFiles(int id) throws IOException {
+        Path dir = Paths.get(directory+id);
+        Files.walk(dir).map(Path::toFile).forEach(File::delete);     
     }
 }
