@@ -53,7 +53,7 @@ public class UserController {
     ProductService productService;
 
     @GetMapping("/user")
-    public String getUserPage(Model model) {
+    public String getUserPage(Model model) throws Exception {
         
         PersonalData data = personalData.getPersonalData(userService.getPrincipalId());
 
@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/user/favourite")
-    public String getFavPage(Model model) {
+    public String getFavPage(Model model) throws Exception {
         
         Iterable<ProductUnit> products = 
             favouriteProductService.getFavProducts(userService.getPrincipalId());
@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @GetMapping("/user/currentOrders")
-    public String getOrederPage(Model model) {
+    public String getOrederPage(Model model) throws Exception {
         
         model.addAttribute("orders", 
             orderManager.getUsersOrders(userService.getPrincipalId()));
@@ -84,7 +84,7 @@ public class UserController {
     }
 
     @GetMapping("/user/shoppingCart")
-    public String getCartPage(Model model) {
+    public String getCartPage(Model model) throws Exception {
 
         LinkedList<ShoppingCart> products = 
             shoppingCartService.getUsersProducts(userService.getPrincipalId());
@@ -115,7 +115,7 @@ public class UserController {
     }
 
     @PostMapping("/user/settings")
-    public String setNewUserData(@ModelAttribute Form form) {
+    public String setNewUserData(@ModelAttribute Form form) throws Exception {
 
         PersonalData data = personalData.getPersonalData(userService.getPrincipalId());
         
@@ -128,7 +128,7 @@ public class UserController {
     @PostMapping("/user/changePassword")
     public String changePassword(@RequestParam("oldPassword") String password,
                                 @RequestParam("password") String newPassword,
-                                Model model, RedirectAttributes atr) {
+                                Model model, RedirectAttributes atr) throws Exception {
 
         User user = userService.savePassword(userService.getPrincipalId(), password, newPassword);
         
@@ -157,7 +157,7 @@ public class UserController {
     @PostMapping("/user/item/{id}/toCart")
     public String addToCart(@PathVariable("id") int id, 
                     @RequestParam("cart") int amount, Model model, 
-                    RedirectAttributes atr) {
+                    RedirectAttributes atr) throws Exception {
 
         try {
             ProductUnit product = productService.getProductById(id);
@@ -177,7 +177,7 @@ public class UserController {
     }
 
     @GetMapping("/user/item/{id}/delFromCart")
-    public String delFromCart(@PathVariable("id") int id) {
+    public String delFromCart(@PathVariable("id") int id) throws Exception {
 
         shoppingCartService.deleteById(id, userService.getPrincipalId());
 
@@ -185,7 +185,7 @@ public class UserController {
     }
     
     @GetMapping("/user/shoppingCart/order")
-    public String orderCart() {
+    public String orderCart() throws Exception {
         
         try {
             orderManager.order(userService.getPrincipalId());
@@ -196,7 +196,7 @@ public class UserController {
     }
 
     @GetMapping("/user/item/{id}/toFavour")
-    public String addToFavour(@PathVariable("id") int id) {
+    public String addToFavour(@PathVariable("id") int id) throws Exception {
 
         FavouriteProduct product = new FavouriteProduct(id, userService.getPrincipalId());
         favouriteProductService.save(product);
@@ -205,13 +205,13 @@ public class UserController {
     }
 
     @GetMapping("/user/item/{id}/delFromFavour")
-    public String delFromFavour(@PathVariable("id") int id) {
-
+    public String delFromFavour(@PathVariable("id") int id, HttpServletRequest request) {
+        
         try {
             favouriteProductService.deleteById(id);
         } catch (Exception e) {}
 
-        return "redirect:/catalog/item/{id}";
+        return "redirect:" + request.getHeader("Referer");
     }
 
     @GetMapping("/user/order/{id}")
@@ -232,7 +232,7 @@ public class UserController {
     }
 
     @GetMapping("/user/delete")
-    public String deleteUser() {
+    public String deleteUser() throws Exception {
 
         int userId = userService.getPrincipalId();
         

@@ -49,6 +49,7 @@
               <p th:text="'Количество товара: ' + ${item.amount}"/>
               <p th:text="'Рейтинг: ' + ${item.rating}"/>
               <a th:href="'/catalog/item/' + ${item.id}" class="btn btn-warning">Детальнее</a>
+              <a th:href="'/user/item/' + ${item.id} + '/delFromFavour'" class="btn btn-danger">Убрать</a>
             </div>
           </div>
       </div>

@@ -4,6 +4,10 @@
 <body>
   <header th:insert="blocks/header.html :: header"></header>
     <div class="d-flex flex-column flex-shrink-0 p-3 border rounded mt-4 mx-auto bg-white text-dark" style="width: 75%;">
+        <div>
+            <a th:href="@{/admin/catalog}" class="btn btn-warning m-3">Назад</a>
+        </div>
+        <hr>
         <form class="mx-3" th:object="${newProduct}" method="POST" enctype="multipart/form-data" action="/admin/catalog">
             <div class="form-group my-2">
                 <label for="Name">Название продукта</label>

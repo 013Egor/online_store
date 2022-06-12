@@ -52,9 +52,13 @@ public class MainController {
         ProductUnit product = productService.getProductById(id);
 
         model.addAttribute("product", product);
+        try {
+            boolean tmp = favProductService.isFavourite(userService.getPrincipalId(), id);
+            model.addAttribute("isFavourite", tmp);
+        } catch (Exception e) {
+            model.addAttribute("isFavourite", false);
+        }
         
-        boolean tmp = favProductService.isFavourite(userService.getPrincipalId(), id);
-        model.addAttribute("isFavourite", tmp);
     }
 
     

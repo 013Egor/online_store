@@ -1,6 +1,7 @@
 package com.restauran.delivery.service;
 
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,15 @@ public class FavouriteProductService {
         ProductUnit temp;
 
         for (FavouriteProduct fProduct : fav) {
-            if (userId == fProduct.getUserId()) {
-                temp = productsRepository.findById(fProduct.getProductId()).orElseThrow();
-                products.add(temp);
+            try {
+                if (userId == fProduct.getUserId()) {
+                    temp = productsRepository.findById(fProduct.getProductId()).orElseThrow();
+                    products.add(temp);
+                }
+            } catch (NoSuchElementException e) {
+                favProdRepository.deleteById(fProduct.getId());
             }
+            
         }
 
         return products;

@@ -83,11 +83,16 @@ public class UserPrincipalService implements UserDetailsService {
         userRepository.deleteById(id);
     }
 
-    public int getPrincipalId() {
+    public int getPrincipalId() throws Exception {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserPrincipal user = (UserPrincipal) auth.getPrincipal();
+        if (auth.isAuthenticated()) {
+            UserPrincipal user = (UserPrincipal) auth.getPrincipal();
         
-        return user.getId();
+            return user.getId();
+        } else {
+            throw new Exception("Not authenticated");
+        }
+        
     }
 }

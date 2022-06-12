@@ -5,6 +5,10 @@
   <header th:insert="blocks/header.html :: header"></header>
   <div class="container">
       <div class="d-flex flex-column flex-shrink-0 p-3 text-dark border rounded mt-4 bg-white">
+        <div>
+            <a th:href="@{/catalog}" class="btn btn-warning m-3">В каталог</a>
+        </div>
+        <hr>
         <div class="row">
             <div class="col-md-6">
                 <div>
@@ -19,9 +23,9 @@
                         <button class="btn btn-primary">Отправить</button>
                     </form>
                 </div>
-                <dif th:if="${message != null}" class="bg-danger border rounded text-white">
+                <div th:if="${message != null}" class="bg-danger border rounded text-white">
                     <p th:text="${message}" class="m-auto text-center" />
-                </dif>
+                </div>
                 <div sec:authorize="hasRole('ROLE_USER')" class="border rounded p-3 m-2 bg-light">
                     <form th:action="@{'/user/item/' + ${product.id} + '/toCart'}" method="post">
                         <label>В корзину:</label>
