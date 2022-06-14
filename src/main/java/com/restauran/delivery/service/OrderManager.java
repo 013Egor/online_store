@@ -5,7 +5,6 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.restauran.delivery.entity.CompletedOrderItem;
@@ -23,25 +22,31 @@ import com.restauran.delivery.repositories.ProductsRepository;
 @Service
 public class OrderManager implements OrderManagerRead, OrderManagerWrite {
     
-    @Autowired
     OrderRepository orderRepository;
 
-    @Autowired
     OrderItemsRepository orderItemsRepository;
 
-    @Autowired
     ShoppingCartService shoppingCartService;
 
-    @Autowired
     CompletedOrdersRepository cOrdersRepository;
 
-    @Autowired
     ProductsRepository productsRepository;
+
+    public OrderManager(OrderRepository orderRepository, OrderItemsRepository orderItemsRepository,
+            ShoppingCartService shoppingCartService, CompletedOrdersRepository cOrdersRepository,
+            ProductsRepository productsRepository) {
+
+        this.orderRepository = orderRepository;
+        this.orderItemsRepository = orderItemsRepository;
+        this.shoppingCartService = shoppingCartService;
+        this.cOrdersRepository = cOrdersRepository;
+        this.productsRepository = productsRepository;
+    }
 
     public void order(int userId) {
 
-        LinkedList<ShoppingCart> all = shoppingCartService.getUsersProducts(userId);
-        if (all.size() == 0) {
+        LinkedList<ShoppingCart> allUsers = shoppingCartService.getUsersProducts(userId);
+        if (allUsers.size() == 0) {
             throw new NoSuchElementException();
         }
         
@@ -50,19 +55,17 @@ public class OrderManager implements OrderManagerRead, OrderManagerWrite {
                                 cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)));
         LinkedList<OrderItem> ordersProducts = new LinkedList<OrderItem>();
         
-        for (ShoppingCart item : all) {
-            if (item.getUserId() == userId) {
-                if (productsRepository.existsById(item.getProductId()) == false) {
-                    orderRepository.deleteById(savedOrder.getId());
-                    deleteShoppingCartOrders(userId);
-                    throw new NoSuchElementException("Данный товар не доступен для заказа");
-                }
-                OrderItem order = new OrderItem(item.getName(), item.getProductId(), item.getAmount());
-                order.setOrderNum(savedOrder.getId());
-                order.setUserId(userId);
-                ordersProducts.add(order);
-                shoppingCartService.deleteById(item.getProductId(), userId);
+        for (ShoppingCart item : allUsers) {
+            if (productsRepository.existsById(item.getProductId()) == false) {
+                orderRepository.deleteById(savedOrder.getId());
+                deleteShoppingCartOrders(userId);
+                throw new NoSuchElementException("This product is unavailable for order");
             }
+            OrderItem order = new OrderItem(item.getName(), item.getProductId(), item.getAmount());
+            order.setOrderNum(savedOrder.getId());
+            order.setUserId(userId);
+            ordersProducts.add(order);
+            shoppingCartService.deleteById(item.getProductId(), userId);
         }
 
         for (OrderItem item : ordersProducts) {
@@ -112,13 +115,13 @@ public class OrderManager implements OrderManagerRead, OrderManagerWrite {
         return order;
     }
 
-    public LinkedList<OrderItem> getOrdersItems(int id) {
+    public LinkedList<OrderItem> getOrdersItems(int orderId) {
 
         Iterable<OrderItem> all = orderItemsRepository.findAll();
         LinkedList<OrderItem> products = new LinkedList<OrderItem>();
         
         for (OrderItem item: all) {
-            if (item.getOrderNum() == id) {
+            if (item.getOrderNum() == orderId) {
                 products.add(item);
             }
         }
@@ -128,17 +131,15 @@ public class OrderManager implements OrderManagerRead, OrderManagerWrite {
 
     public Iterable<CompletedOrderItem> getCompletedOrders() {
 
-        Iterable<CompletedOrderItem> all = cOrdersRepository.findAll();
-
-        return all;
+        return cOrdersRepository.findAll();
     }
 
-    public CompletedOrderItem getCompletedOrderItems(int id) throws NoSuchElementException {
+    private CompletedOrderItem getCompletedOrderItem(int productId) throws NoSuchElementException {
 
         Iterable<CompletedOrderItem> completedOrders = cOrdersRepository.findAll();
 
         for (CompletedOrderItem cItem : completedOrders) {
-            if (id == cItem.getProductId()) {
+            if (productId == cItem.getProductId()) {
                return cItem; 
             }
         }
@@ -158,17 +159,17 @@ public class OrderManager implements OrderManagerRead, OrderManagerWrite {
         return order;
     }
 
-    public void takeOrderOff(int id) throws NoSuchElementException{
-        Order order = orderRepository.findById(id).orElseThrow();
+    public void takeOrderOff(int orderId) throws NoSuchElementException{
+        Order order = orderRepository.findById(orderId).orElseThrow();
 
         Iterable<OrderItem> all = orderItemsRepository.findAll();
         LinkedList<CompletedOrderItem> completed = new LinkedList<CompletedOrderItem>();
         CompletedOrderItem orderItem;
 
         for (OrderItem item : all) {
-            if (item.getOrderNum() == id) {
+            if (item.getOrderNum() == orderId) {
                 try {
-                    orderItem = this.getCompletedOrderItems(item.getProductId());
+                    orderItem = this.getCompletedOrderItem(item.getProductId());
                 } catch (NoSuchElementException e) {
                     orderItem = new CompletedOrderItem();
                     orderItem.setName(item.getName());
@@ -188,14 +189,14 @@ public class OrderManager implements OrderManagerRead, OrderManagerWrite {
         orderRepository.save(order);
     }
 
-    public void deleteCompletedOrder(int id) {
-        Order order = orderRepository.findById(id).orElseThrow();
+    public void deleteCompletedOrder(int orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
         
         if (order.isDelivered()) {
-            orderRepository.deleteById(id);
+            orderRepository.deleteById(orderId);
             Iterable<OrderItem> all = orderItemsRepository.findAll();
             for (OrderItem item : all) {
-                if (item.getOrderNum() == id) {
+                if (item.getOrderNum() == orderId) {
                     orderItemsRepository.deleteById(item.getId());
                 }
             }

@@ -7,9 +7,7 @@ import com.restauran.delivery.entity.Form;
 import com.restauran.delivery.entity.PersonalData;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 public class PersonalDataTest {
 
     String addressAfter = "Perm";

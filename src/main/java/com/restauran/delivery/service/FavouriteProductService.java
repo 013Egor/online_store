@@ -3,7 +3,6 @@ package com.restauran.delivery.service;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.restauran.delivery.entity.FavouriteProduct;
@@ -14,12 +13,18 @@ import com.restauran.delivery.repositories.ProductsRepository;
 @Service
 public class FavouriteProductService {
 
-    @Autowired
+    
     FavouriteProductRepository favProdRepository;
 
-    @Autowired
+    
     ProductsRepository productsRepository;
     
+    public FavouriteProductService(FavouriteProductRepository favProdRepository,
+            ProductsRepository productsRepository) {
+        this.favProdRepository = favProdRepository;
+        this.productsRepository = productsRepository;
+    }
+
     public LinkedList<ProductUnit> getFavProducts(int userId) {
 
         Iterable<FavouriteProduct> fav = favProdRepository.findAll();
@@ -45,12 +50,12 @@ public class FavouriteProductService {
         favProdRepository.save(product);
     }
 
-    public void deleteById(int id) {
+    public void deleteById(int productId, int userId) {
         Iterable<FavouriteProduct> all = favProdRepository.findAll();
         Integer favId = null;
 
         for (FavouriteProduct item : all) {
-            if (item.getProductId() == id) {
+            if (item.getProductId() == productId && item.getUserId() == userId) {
                 favId = item.getId();
                 break;
             }

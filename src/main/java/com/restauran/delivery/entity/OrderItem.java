@@ -26,6 +26,22 @@ public class OrderItem {
         this.productId = productId;
         this.amount = amount;
     }
+
+    public OrderItem(String name, int productId, int amount, int orderNum) {
+        this.name = name;
+        this.productId = productId;
+        this.amount = amount;
+        this.orderNum = orderNum;
+    }
+
+    public void setAll(OrderItem item) {
+        this.name = item.name;
+        this.productId = item.productId;
+        this.amount = item.amount;
+        this.orderNum = item.orderNum;
+        this.userId = item.userId;
+        this.id = item.id.intValue();
+    }
     
     public Integer getId() {
         return id;
@@ -69,5 +85,9 @@ public class OrderItem {
     
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

@@ -14,7 +14,5 @@ public interface OrderManagerRead {
     
     public Iterable<CompletedOrderItem> getCompletedOrders();
     
-    public CompletedOrderItem getCompletedOrderItems(int id);
-    
     public LinkedList<Order> getOrders();
 }

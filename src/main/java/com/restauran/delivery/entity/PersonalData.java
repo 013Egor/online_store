@@ -32,6 +32,17 @@ public class PersonalData {
         this.address = address;
     }
 
+    public void setAll (PersonalData data) {
+        this.id = data.id.intValue();
+        this.firstName = data.firstName;
+        this.lastName = data.lastName;
+        this.middleName = data.middleName;
+        this.telNumber = data.telNumber;
+        this.email = data.email;
+        this.address = data.address;
+        this.userId = data.userId;
+    }
+
     public PersonalData(Form userForm) {
         this.setAddress(userForm.getAddress());
         this.setEmail(userForm.getEmail());
@@ -108,5 +119,9 @@ public class PersonalData {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

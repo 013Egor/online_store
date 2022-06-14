@@ -1,8 +1,8 @@
 package com.restauran.delivery.service;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.restauran.delivery.entity.PersonalData;
@@ -11,8 +11,12 @@ import com.restauran.delivery.repositories.PersonalDataRepository;
 @Service
 public class PersonalDataService {
     
-    @Autowired
+    
     PersonalDataRepository pDataRepository;
+
+    public PersonalDataService(PersonalDataRepository pDataRepository) {
+        this.pDataRepository = pDataRepository;
+    }
 
     public PersonalData getPersonalData(int id) {
 
@@ -27,7 +31,7 @@ public class PersonalDataService {
             }
         }
 
-        return null;
+        throw new NoSuchElementException("This user is not existed");
     }
 
     public void save(PersonalData data) {

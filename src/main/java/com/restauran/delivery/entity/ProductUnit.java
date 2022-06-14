@@ -20,6 +20,16 @@ public class ProductUnit {
     int amount;
     double price;
 
+    public ProductUnit(String name, double rating, String composition, String picture, int amount,
+            double price) {
+        this.name = name;
+        this.rating = rating;
+        this.composition = composition;
+        this.picture = picture;
+        this.amount = amount;
+        this.price = price;
+    }
+
     public ProductUnit() {
         name = "";
         composition = "";
@@ -27,6 +37,16 @@ public class ProductUnit {
         amount = 0;
         rating = 0;
     }
+
+    public void setAll(ProductUnit unit) {
+        this.id = unit.id.intValue();
+        this.name = unit.name;
+        this.rating = unit.rating;
+        this.composition = unit.composition;
+        this.picture = unit.picture;
+        this.amount = unit.amount;
+        this.price = unit.price;
+    }   
 
     public Integer getId() {
         return id;
@@ -109,5 +129,9 @@ public class ProductUnit {
         this.setComposition(newProduct.getComposition());
         this.setName(newProduct.getName());
         this.setPrice(newProduct.getPrice());
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

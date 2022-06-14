@@ -208,7 +208,7 @@ public class UserController {
     public String delFromFavour(@PathVariable("id") int id, HttpServletRequest request) {
         
         try {
-            favouriteProductService.deleteById(id);
+            favouriteProductService.deleteById(id, userService.getPrincipalId());
         } catch (Exception e) {}
 
         return "redirect:" + request.getHeader("Referer");

@@ -26,6 +26,15 @@ public class ShoppingCart {
         this.amount = amount;
     }
 
+    public void setAll(ShoppingCart c) {
+        ShoppingCart cart = (ShoppingCart) c;
+        this.name = cart.name;
+        this.productId = cart.productId;
+        this.userId = cart.userId;
+        this.amount = cart.amount;
+        this.id = cart.id;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -60,5 +69,9 @@ public class ShoppingCart {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

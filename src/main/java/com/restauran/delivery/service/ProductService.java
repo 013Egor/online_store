@@ -3,7 +3,6 @@ package com.restauran.delivery.service;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.restauran.delivery.entity.ProductUnit;
@@ -12,9 +11,12 @@ import com.restauran.delivery.repositories.ProductsRepository;
 @Service
 public class ProductService {
 
-    @Autowired
     ProductsRepository productsRepository;
     
+    public ProductService(ProductsRepository productsRepository) {
+        this.productsRepository = productsRepository;
+    }
+
     public void setNewRating(int id, int rating) throws NoSuchElementException {
 
         ProductUnit product = productsRepository.findById(id).orElseThrow();

@@ -20,6 +20,11 @@ public class Order {
     int month;
     int day;
 
+    public Order(int userId, boolean isDelivered) {
+        this.userId = userId;
+        this.isDelivered = isDelivered;
+    }
+
     public Order(){}
 
     public Order(int userId, int year, int month, int day) {
@@ -28,7 +33,14 @@ public class Order {
         this.month = month;
         this.day = day;
     }
-
+    public void setAll (Order order) {
+        this.userId = order.userId;
+        this.year = order.year;
+        this.month = order.month;
+        this.day = order.day;
+        this.isDelivered = order.isDelivered;
+        this.id = order.id.intValue();
+    }
     public Integer getId() {
         return id;
     }
@@ -71,5 +83,9 @@ public class Order {
 
     public void setDay(int day) {
         this.day = day;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

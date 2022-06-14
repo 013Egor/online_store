@@ -3,7 +3,6 @@ package com.restauran.delivery.service;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.restauran.delivery.entity.ProductUnit;
@@ -14,9 +13,12 @@ import com.restauran.delivery.repositories.ShoppingCartRepository;
 @Service
 public class ShoppingCartService {
 
-    @Autowired
     ShoppingCartRepository cartRepository;
     
+    public ShoppingCartService(ShoppingCartRepository cartRepository) {
+        this.cartRepository = cartRepository;
+    }
+
     public LinkedList<ShoppingCart> getUsersProducts(int userId) {
 
         Iterable<ShoppingCart> cart = cartRepository.findAll();
@@ -44,8 +46,8 @@ public class ShoppingCartService {
         throw new NoSuchElementException();
     }
 
-    public void addProductToCart(ProductUnit product, int amount, int userId) throws NoSuchElementException, 
-                                                        NotEnoghElementsException {
+    public void addProductToCart(ProductUnit product, int amount, int userId)  
+                                                throws NotEnoghElementsException {
                                                             
         int curAmount = product.getAmount();
         if (curAmount < amount) {

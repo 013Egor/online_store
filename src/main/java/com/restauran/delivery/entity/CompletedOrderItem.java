@@ -20,6 +20,15 @@ public class CompletedOrderItem {
 
     public CompletedOrderItem() {}
 
+    public void setAll (CompletedOrderItem item) {
+        this.id = item.id.intValue();        
+        this.productId = item.productId;
+        this.name = item.name;
+        this.amount = item.amount;
+        this.rating = item.rating;
+        this.price = item.price;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -62,5 +71,9 @@ public class CompletedOrderItem {
     
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

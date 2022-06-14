@@ -22,6 +22,12 @@ public class FavouriteProduct {
         this.userId = userId;
     }
     
+    public void setAll (FavouriteProduct product) {
+        this.id = product.id.intValue();
+        this.productId = product.productId;
+        this.userId = product.userId;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -40,5 +46,9 @@ public class FavouriteProduct {
     
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
