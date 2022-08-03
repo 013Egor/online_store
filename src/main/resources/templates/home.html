@@ -1,9 +1,41 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:insert="blocks/headHTML.html :: head"></head>
+<head th:insert="blocks/headHTML.html :: head">
+  <link data-th-href="@{/src/main/resources/static/css/mainPage.css}" rel="stylesheet" >
+</head>
 <body>
   <header th:insert="blocks/header.html :: header"></header>
-  <div class="container ">
+  <div>
+    <div class="imageCarusel">
+      <div class="image my-fade">
+        <img src="/design_img/ales-krivec-QnNqGoCnBg0-unsplash.jpg" alt="(" width="100%">
+      </div>
+      <div class="image my-fade">
+        <img src="/design_img/andrei-caliman-tuDUVwkndYU-unsplash.jpg" alt="(" width="100%">
+      </div>
+      <div class="image my-fade">
+        <img src="/design_img/jordane-mathieu-4M-4_ZQFEuY-unsplash.jpg" alt="(" width="100%">
+      </div>
+      <div class="image my-fade">
+        <img src="/design_img/mae-mu-ecUVGNZA1TM-unsplash.jpg" alt="(" width="100%">
+      </div>
+  
+      <i id="prev" onclick="showImage(-1)"class="fa-solid fa-square-caret-left"></i>
+      <i id="next" onclick="showImage(1)" class="fa-solid fa-square-caret-right"></i>
+      
+      <div class="dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    
+
+  </div>
+  <div class="container">
+  
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white border rounded mt-4 bg-white">
       <div class="bg-dark border rounded text-center">
         <h1>Лучшие товары</h1>
@@ -17,5 +49,6 @@
     </div>
   </div>
   <div th:insert="blocks/footer.html :: footer"></div>
+  <script src="/js/imageController.js"></script>
 </body>
 </html>
